@@ -1,0 +1,15 @@
+#통계 서버라 가정
+
+server:
+  port: 8083
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+#      테스트1. groupid는 컨슈머 그룹을 식별하는 ID로서, 동일한 그룹ID를 가진 컨슈머들은 메시지를 분담해서 consume
+      member-topic-log-group-id: member-topic-log-group
+#      테스트2. 만약 서버확장시 pub/sub 기능으로 사용하고 싶다면, 다른 그룹 ID를 부여
+#      member-topic-static-group-id: member-topic-static-group
+#      테스트3. auto-offset-reset설정 : 컨슈머그룹ID가 다를때 earliest는 과거의 메시지까지, latest는 최신의 메시지만
+#      member-topic-static-group-id: member-topic-static-group2
+      auto-offset-reset: latest

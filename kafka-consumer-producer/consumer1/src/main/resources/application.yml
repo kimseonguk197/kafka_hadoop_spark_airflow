@@ -1,0 +1,9 @@
+#로그 서버라 가정
+server:
+  port: 8082
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      #      groupid는 컨슈머 그룹을 식별하는 ID로서, 동일한 그룹ID를 가진 컨슈머들은 메시지를 분담해서 consume
+      member-topic-log-group-id: member-topic-log-group

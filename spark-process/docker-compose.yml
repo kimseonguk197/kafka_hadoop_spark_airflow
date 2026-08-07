@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # HDFS 네임노드 설정: 메타데이터 관리 및 파일 시스템 구조 유지
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-namenode
+    environment:
+      - CLUSTER_NAME=test                      # HDFS 클러스터 고유 이름
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020 # HDFS의 기본 파일 시스템 경로 설정
+    ports:
+      - "9870:9870"   # NameNode Web UI 접속용 포트 (웹 브라우저에서 HDFS 상태 확인)
+      - "8020:8020"   # NameNode IPC 포트 (HDFS 내부 통신 및 클라이언트 접근용)
+    volumes:
+      - ./data/namenode:/hadoop/dfs/name      # 네임노드의 메타데이터(이미지, 에딧로그)를 저장할 로컬 볼륨
+
+  # HDFS 데이터노드 설정: 실제 데이터 블록 저장
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870    # 네임노드가 준비된 후 실행되도록 대기
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    ports:
+      - "9864:9864"   # DataNode Web UI 접속용 포트
+    volumes:
+      - ./data/datanode:/hadoop/dfs/data      # 실제 데이터 블록들이 저장되는 로컬 볼륨
+    depends_on:
+      - namenode                              # 네임노드 먼저 실행 보장
+
+  # Spark 마스터 설정: 클러스터 리소스 관리 및 작업 분배
+  spark-master:
+    image: bde2020/spark-master:3.1.1-hadoop3.2
+    container_name: spark-master
+    environment:
+      # REST Submission API(6066)는 기본적으로 꺼져있어서 명시적으로 켜줘야 함 (Airflow가 이 API로 spark-submit을 요청)
+      - SPARK_MASTER_OPTS=-Dspark.master.rest.enabled=true
+    ports:
+      - "8080:8080"   # Spark Master Web UI (클러스터 상태 및 앱 실행 현황 확인)
+      - "7077:7077"   # Spark Master 통신 포트 (Worker 노드 및 드라이버 프로그램 연결)
+      - "6066:6066"   # Spark REST Submission API (Airflow가 spark-submit 대신 HTTP로 잡을 제출할 때 사용)
+    volumes:
+      - .:/spark-process                      # 현재 프로젝트 경로를 컨테이너 내 작업 디렉토리와 공유
+      - ./test_data:/test_data                # 분석할 데이터 파일이 있는 디렉토리를 공유
+    depends_on:
+      - namenode
+      - datanode
+
+  # Spark 워커 설정: 실제 계산 작업 수행
+  spark-worker:
+    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    container_name: spark-worker
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077 # 연결할 마스터 주소 지정
+    ports:
+      - "8081:8081"   # Spark Worker Web UI
+    volumes:
+      - .:/spark-process                      # 작업 코드 공유
+      - ./test_data:/test_data                # 데이터 파일 공유
+    depends_on:
+      - spark-master
+
+  
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+    - "5432:5432"   # 내 컴퓨터(DataGrip)에서 접속할 수 있도록 포트 오픈
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  airflow:
+    image: apache/airflow:2.9.1
+    user: root
+    environment:
+    # 작업을 순차적으로 실행하는 단일 프로세스 기반의 SequentialExecutor 사용
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+    # postgressql 주소/계정정보 지정
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      # Airflow 설치 시 기본 제공되는 예제 DAG들을 생성 X
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      # 새로운 DAG가 추가될 때 자동으로 활성화(Unpaused) 상태
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+    ports:
+      - "8089:8080"   
+    volumes:
+      - ./.dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    depends_on:
+      postgres:
+      # DB가 완전히 준비된 후 Airflow 실행
+        condition: service_healthy  
+
+    command: standalone
+    restart: always
+  
+
+# 컨테이너 데이터 영속성을 위한 볼륨 정의
+volumes:
+  hadoop_namenode:   # 네임노드 메타데이터 유지
+  hadoop_datanode:   # 데이터노드 블록 데이터 유지

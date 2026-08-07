@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.6.1'
+}
+
+group = 'com.example'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    sparkVersion = '3.1.1'
+    scalaBinaryVersion = '2.12'
+}
+
+dependencies {
+    // spark-master 컨테이너가 실행 시점에 자체 Spark jar를 제공하므로 compileOnly로 컴파일에만 사용
+    compileOnly "org.apache.spark:spark-core_${scalaBinaryVersion}:${sparkVersion}"
+    compileOnly "org.apache.spark:spark-sql_${scalaBinaryVersion}:${sparkVersion}"
+    implementation "org.apache.spark:spark-sql-kafka-0-10_${scalaBinaryVersion}:${sparkVersion}"
+}
+
+// 로컬 JDK(21)로 컴파일하되, 컨테이너의 Spark 3.1.1이 실행 가능한 Java 8 바이트코드로 target
+tasks.withType(JavaCompile).configureEach {
+    options.release = 8
+}
+
+jar {
+    // 얇은 jar는 사용하지 않고 shadowJar(fat jar)만 build/libs/spark-examples.jar로 생성
+    enabled = false
+}
+
+shadowJar {
+    archiveBaseName = 'spark-examples'
+    archiveVersion = ''
+    archiveClassifier = ''
+    // format("kafka") 조회에 쓰이는 META-INF/services/...DataSourceRegister 파일이
+    // 여러 jar에 걸쳐 있어서, 병합하지 않으면 하나만 남아 소스 조회가 깨질 수 있음
+    mergeServiceFiles()
+}

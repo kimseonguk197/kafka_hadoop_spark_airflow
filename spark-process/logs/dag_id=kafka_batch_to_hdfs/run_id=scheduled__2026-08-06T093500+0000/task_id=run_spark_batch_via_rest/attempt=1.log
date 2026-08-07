@@ -1,0 +1,18 @@
+[2026-08-06T09:40:03.290+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-08-06T09:40:03.402+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: kafka_batch_to_hdfs.run_spark_batch_via_rest scheduled__2026-08-06T09:35:00+00:00 [queued]>
+[2026-08-06T09:40:03.412+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: kafka_batch_to_hdfs.run_spark_batch_via_rest scheduled__2026-08-06T09:35:00+00:00 [queued]>
+[2026-08-06T09:40:03.415+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-08-06T09:40:03.432+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): run_spark_batch_via_rest> on 2026-08-06 09:35:00+00:00
+[2026-08-06T09:40:03.438+0000] {standard_task_runner.py:63} INFO - Started process 206 to run task
+[2026-08-06T09:40:03.442+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'kafka_batch_to_hdfs', 'run_spark_batch_via_rest', 'scheduled__2026-08-06T09:35:00+00:00', '--job-id', '10', '--raw', '--subdir', 'DAGS_FOLDER/kafka_batch_to_hdfs_dag.py', '--cfg-path', '/tmp/tmpwlkwg3_l']
+[2026-08-06T09:40:03.445+0000] {standard_task_runner.py:91} INFO - Job 10: Subtask run_spark_batch_via_rest
+[2026-08-06T09:40:03.534+0000] {task_command.py:426} INFO - Running <TaskInstance: kafka_batch_to_hdfs.run_spark_batch_via_rest scheduled__2026-08-06T09:35:00+00:00 [running]> on host f651073215f5
+[2026-08-06T09:40:03.659+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='kafka_batch_to_hdfs' AIRFLOW_CTX_TASK_ID='run_spark_batch_via_rest' AIRFLOW_CTX_EXECUTION_DATE='2026-08-06T09:35:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-08-06T09:35:00+00:00'
+[2026-08-06T09:40:03.662+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-08-06T09:40:03.710+0000] {logging_mixin.py:188} INFO - >>> 제출 완료. submissionId=driver-20260806094003-0007
+[2026-08-06T09:40:03.712+0000] {python.py:237} INFO - Done. Returned value was: None
+[2026-08-06T09:40:03.714+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-08-06T09:40:03.731+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=kafka_batch_to_hdfs, task_id=run_spark_batch_via_rest, run_id=scheduled__2026-08-06T09:35:00+00:00, execution_date=20260806T093500, start_date=20260806T094003, end_date=20260806T094003
+[2026-08-06T09:40:03.778+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-08-06T09:40:03.797+0000] {taskinstance.py:3498} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-08-06T09:40:03.802+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
