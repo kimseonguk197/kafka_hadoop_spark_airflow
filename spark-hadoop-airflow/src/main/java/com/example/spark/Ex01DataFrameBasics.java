@@ -14,7 +14,7 @@ import java.util.List;
 import static org.apache.spark.sql.functions.col;
 
 // Spark DataFrame의 기본 생명주기: 생성 -> 가공 -> 분석
-// 테스트 : docker exec -it spark-master /spark/bin/spark-submit --class com.example.spark.Ex01DataFrameBasics --master spark://spark-master:7077 /spark-process/build/libs/spark-examples.jar  
+// 테스트 : docker exec -it spark-master /spark/bin/spark-submit --class com.example.spark.Ex01DataFrameBasics --master spark://spark-master:7077 /spark-hadoop-airflow/build/libs/spark-examples.jar  
 public class Ex01DataFrameBasics {
     public static void main(String[] args) {
         // 1. SparkSession: Spark 기능의 진입점(Entry Point).

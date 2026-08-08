@@ -11,7 +11,7 @@
 
 # SPARK_REST_URL = "http://spark-master:6066"
 # NAMENODE_WEBHDFS_URL = "http://namenode:9870"
-# JAR_PATH = "file:///spark-process/build/libs/spark-examples.jar"
+# JAR_PATH = "file:///spark-hadoop-airflow/build/libs/spark-examples.jar"
 # MAIN_CLASS = "com.example.spark.Ex05AirflowSpark"
 # HDFS_OUTPUT_PATH = "/user/hadoop/refined_data/airflow_batch/members"
 

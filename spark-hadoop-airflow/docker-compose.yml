@@ -40,7 +40,7 @@ services:
       - "7077:7077"   # Spark Master 통신 포트 (Worker 노드 및 드라이버 프로그램 연결)
       - "6066:6066"   # Spark REST Submission API (Airflow가 spark-submit 대신 HTTP로 잡을 제출할 때 사용)
     volumes:
-      - .:/spark-process                      # 현재 프로젝트 경로를 컨테이너 내 작업 디렉토리와 공유
+      - .:/spark-hadoop-airflow                      # 현재 프로젝트 경로를 컨테이너 내 작업 디렉토리와 공유
       - ./test_data:/test_data                # 분석할 데이터 파일이 있는 디렉토리를 공유
     depends_on:
       - namenode
@@ -55,7 +55,7 @@ services:
     ports:
       - "8081:8081"   # Spark Worker Web UI
     volumes:
-      - .:/spark-process                      # 작업 코드 공유
+      - .:/spark-hadoop-airflow               # 작업 코드 공유
       - ./test_data:/test_data                # 데이터 파일 공유
     depends_on:
       - spark-master
