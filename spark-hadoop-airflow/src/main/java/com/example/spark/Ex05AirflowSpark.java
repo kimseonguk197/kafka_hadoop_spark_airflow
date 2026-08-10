@@ -5,6 +5,7 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.when;
@@ -18,12 +19,14 @@ public class Ex05AirflowSpark {
                 .getOrCreate();
 
         spark.sparkContext().setLogLevel("WARN");
-
+        System.out.println(">>> 현재 서버 시간: " + LocalDateTime.now());
         // 오늘날짜 추출
         String today = LocalDate.now().toString();
 
         // Ex04KafkaJsonStreaming이 저장한 원본 Parquet 중 오늘 날짜 폴더만 읽기
         String hdfsRawPath = "hdfs://namenode:8020/user/hadoop/refined_data/member_stream/" + today;
+//        String hdfsRawPath = "s3://my-kafka-spark-airflow-bucket-346903264902-ap-northeast-2-an/user/hadoop/refined_data/member_stream/" + today;
+
         Dataset<Row> rawDf;
         try {
             rawDf = spark.read().parquet(hdfsRawPath);
@@ -39,6 +42,7 @@ public class Ex05AirflowSpark {
 
         // 정제 데이터를 오늘 날짜 폴더에 Parquet로 저장 (같은 날 재실행해도 오늘 폴더만 덮어씀)
         String hdfsRefinedPath = "hdfs://namenode:8020/user/hadoop/refined_data/airflow_batch/members/" + today;
+//        String hdfsRefinedPath = "s3://my-kafka-spark-airflow-bucket-346903264902-ap-northeast-2-an/user/hadoop/refined_data/airflow_batch/members/" + today;
         refinedDf.write().mode("overwrite").parquet(hdfsRefinedPath);
         System.out.println(">>> 정제된 데이터를 HDFS에 저장했습니다 (Parquet): " + hdfsRefinedPath);
 

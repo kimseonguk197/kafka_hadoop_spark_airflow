@@ -1,17 +1,17 @@
 package com.example.consumer.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @Transactional
 public class ConsumerService {
-    private final ObjectMapper objectMapper;
-    public ConsumerService(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    private final JsonMapper jsonMapper;
+    public ConsumerService(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
 //  테스트1 : 2대의 컨슈머서버가 같은 그룹ID를 가지고 같은 topic을 listen 경우

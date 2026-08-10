@@ -1,18 +1,18 @@
 package com.example.consumer.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @Transactional
 public class 실습1 {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public 실습1(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public 실습1(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
 //    테스트1. 메시지 송수신 기본 실습(하나의 컨슈머그룹에 하나의 컨슈머가 1개의 토픽을 listen)

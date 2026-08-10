@@ -32,7 +32,8 @@ public class Ex04KafkaJsonStreaming {
         // 1. member-topic 구독
         // consumer group id의 경우 spark-kafka-source-<UUID>-... 형태로 자동 생성
         // offset-reset은 latest 기본
-        String bootstrapServers = "host.docker.internal:29092";
+       String bootstrapServers = "host.docker.internal:29092";
+        // String bootstrapServers = "b-1.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092";
         Dataset<Row> kafkaDf = spark.readStream()
                 .format("kafka")
                 .option("kafka.bootstrap.servers", bootstrapServers)
@@ -47,8 +48,10 @@ public class Ex04KafkaJsonStreaming {
 
         // 3. HDFS(Parquet)에 저장
         String hdfsRefinedPath = "hdfs://namenode:8020/user/hadoop/refined_data/member_stream/";
+//        String hdfsRefinedPath = "s3://my-kafka-spark-airflow-bucket-346903264902-ap-northeast-2-an/user/hadoop/refined_data/member_stream/";
         // checkpointLocation: 데이터가 아니라 이 스트리밍 쿼리의 진행 상태가 기록되는 곳
-        String checkpointLocationPath = "hdfs://namenode:8020/user/hadoop/checkpoints/";
+        String checkpointLocationPath = "hdfs://namenode:8020/user/hadoop/checkpoints/member_stream/";
+//        String checkpointLocationPath = "s3://my-kafka-spark-airflow-bucket-346903264902-ap-northeast-2-an/user/hadoop/checkpoints/member_stream/";
         StreamingQuery query = memberDf.writeStream()
                 .outputMode("append")
                 .option("checkpointLocation", checkpointLocationPath)

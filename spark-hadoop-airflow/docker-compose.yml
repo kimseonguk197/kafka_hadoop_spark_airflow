@@ -30,7 +30,7 @@ services:
 
   # Spark 마스터 설정: 클러스터 리소스 관리 및 작업 분배
   spark-master:
-    image: bde2020/spark-master:3.1.1-hadoop3.2
+    image: bde2020/spark-master:3.3.0-hadoop3.3
     container_name: spark-master
     environment:
       # REST Submission API(6066)는 기본적으로 꺼져있어서 명시적으로 켜줘야 함 (Airflow가 이 API로 spark-submit을 요청)
@@ -48,7 +48,7 @@ services:
 
   # Spark 워커 설정: 실제 계산 작업 수행
   spark-worker:
-    image: bde2020/spark-worker:3.1.1-hadoop3.2
+    image: bde2020/spark-worker:3.3.0-hadoop3.3
     container_name: spark-worker
     environment:
       - SPARK_MASTER=spark://spark-master:7077 # 연결할 마스터 주소 지정

@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8080
 spring:
   kafka:
 # #    kafka서버의 url
@@ -7,4 +7,4 @@ spring:
 #     멀티 브로커 환경에서의 설정 : 반드시 n대의 서버를 나열할필요는 없고, 1대에만 지정해도 내부적으로 리더 브로커로 요청 전파
     bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
 #    # (AWS)MSK 클러스터의 프라이빗 엔드포인트 주소들을 나열
-#    bootstrap-servers: b-1.cjmsk.lhd0qr.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.cjmsk.lhd0qr.c4.kafka.ap-northeast-2.amazonaws.com:9092
+#    bootstrap-servers: b-1.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092

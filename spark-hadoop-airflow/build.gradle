@@ -11,7 +11,7 @@ repositories {
 }
 
 ext {
-    sparkVersion = '3.1.1'
+    sparkVersion = '3.3.0'
     scalaBinaryVersion = '2.12'
 }
 
@@ -22,7 +22,7 @@ dependencies {
     implementation "org.apache.spark:spark-sql-kafka-0-10_${scalaBinaryVersion}:${sparkVersion}"
 }
 
-// 로컬 JDK(21)로 컴파일하되, 컨테이너의 Spark 3.1.1이 실행 가능한 Java 8 바이트코드로 target
+// 로컬 JDK(21)로 컴파일하되, 컨테이너의 Spark 3.3.0이 실행 가능한 Java 8 바이트코드로 target
 tasks.withType(JavaCompile).configureEach {
     options.release = 8
 }
