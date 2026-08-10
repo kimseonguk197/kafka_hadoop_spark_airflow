@@ -14,7 +14,7 @@ public class Ex03SparkSqlBasics {
                 .appName("SparkSQLBasics")
                 .getOrCreate();
         spark.sparkContext().setLogLevel("WARN");
-        // 1. 데이터 로드
+        // 데이터 로드
         Dataset<Row> rawDf = spark.read().json("/test_data/members.json");
 
         Dataset<Row> df = rawDf
@@ -30,6 +30,7 @@ public class Ex03SparkSqlBasics {
         System.out.println(">>> SQL: 성인 회원만 조회");
         spark.sql("SELECT name, age FROM members WHERE isAdult = true").show();
 
+        // 복잡한 집계, 정렬 SQL문 가능
         System.out.println(">>> SQL: 도메인별 회원 수 (GROUP BY)");
         spark.sql(
                 "SELECT emailDomain, COUNT(*) AS member_count " +
@@ -38,7 +39,7 @@ public class Ex03SparkSqlBasics {
                         "ORDER BY member_count DESC"
         ).show();
 
-        // 2. SQL문으로 JOIN 수행
+        // SQL문으로 JOIN 수행도 가능
         System.out.println(">>> [SQL 방식] inner join");
         Dataset<Row> ordersDf = spark.read().json("/test_data/orders.json");
         ordersDf.createOrReplaceTempView("orders");
@@ -48,7 +49,7 @@ public class Ex03SparkSqlBasics {
                         "JOIN orders o ON m.email = o.memberEmail"
         ).show();
 
-        // DataFrame API와 SQL은 동일한 엔진사용
+        // DataFrame API와 SQL은 결국 동일한 엔진사용
         System.out.println(">>> [비교] 성인 회원 조회 (SQL 방식)");
         spark.sql("SELECT name, age FROM members WHERE isAdult = true").show();
 
