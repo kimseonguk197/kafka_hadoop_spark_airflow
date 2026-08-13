@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  port: 8084
+  # port: 8080
 spring:
   kafka:
 # #    kafka서버의 url
