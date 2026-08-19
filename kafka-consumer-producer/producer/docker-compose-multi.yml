@@ -21,7 +21,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: HOST
       # 메타데이터 관리 를 위한 컨트롤러 리스너 지정 -> 주로 쿼럼 통신 및 브로커 상태 관리 상황에서 컨트롤러  호출
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      # 세 리스너 모두 암호화나 인증을 거치지 않는 일반 평문 통신인 PLAINTEXT를 사용하도록 지정
       # 쿼럼에 참여하는 3대 노드의 ID와 주소 명시
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
       # 세 리스너 모두 암호화나 인증을 거치지 않는 일반 평문 통신인 PLAINTEXT를 사용하도록 지정
