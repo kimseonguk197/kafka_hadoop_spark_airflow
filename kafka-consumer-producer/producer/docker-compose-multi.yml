@@ -10,18 +10,31 @@ services:
       KAFKA_NODE_ID: 1
       # 주요 노드에 controller역할 부여
       KAFKA_PROCESS_ROLES: broker,controller
+      # 리스너를 용도별로 분리
+      # 1.host -> 해당 컨테이너 내부에 open된 통신 port
+      # 2.controller -> KRaft 모드에서 메타데이터 관리를 담당하는 컨트롤러 내부 통신을 위한 포트(주로 브로커의 상태보고 목적)
+      # [리스너이름]://[IP]:[포트] 형식으로서 IP는 0.0.0.0 이 생략된 형태
       KAFKA_LISTENERS: HOST://:9092,CONTROLLER://:9093
+      # 외부에서 이 브로커를 접근할 때 사용할 주소와 포트. controller는 외부가 아니므로 설정은 불필요
       KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092
+      # 브로커들간의 통신 목적으로는 HOST사용 -> 주로 복제 상황에서 상호 호출
       KAFKA_INTER_BROKER_LISTENER_NAME: HOST
+      # 메타데이터 관리 를 위한 컨트롤러 리스너 지정 -> 주로 쿼럼 통신 및 브로커 상태 관리 상황에서 컨트롤러  호출
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # 세 리스너 모두 암호화나 인증을 거치지 않는 일반 평문 통신인 PLAINTEXT를 사용하도록 지정
       # 쿼럼에 참여하는 3대 노드의 ID와 주소 명시
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      # 세 리스너 모두 암호화나 인증을 거치지 않는 일반 평문 통신인 PLAINTEXT를 사용하도록 지정
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      # 자동 토픽 생성 허용 : 기본값 true
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       # 클러스터 구성이므로 복제수 기본값을 3으로 상향 조정
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      # 토픽당 파티션 기본값은 1개
+      # 브로커의 모든 토픽에 대한 설정
       KAFKA_NUM_PARTITIONS: 4
+      # 메시지 보관 7일 : 별도의 설정이 없어도 default 7일
       KAFKA_LOG_RETENTION_HOURS: 168
     restart: unless-stopped
 

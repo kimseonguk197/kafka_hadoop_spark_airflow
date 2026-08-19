@@ -14,7 +14,7 @@ services:
       KAFKA_PROCESS_ROLES: broker,controller
       # 리스너를 용도별로 분리
       # 1.host -> 모든 네트워크 인터페이스의 9092 포트에서 HOST라는 이름의 통신을 수신
-      # 2.controller -> KRaft 모드에서 메타데이터 관리를 담당하는 컨트롤러 통신을 위함 : 주로 부로커의 상태보고 목적
+      # 2.controller -> KRaft 모드에서 메타데이터 관리를 담당하는 컨트롤러 내부 통신을 위함. 주로 브로커의 상태보고 목적
       # 3.docker -> 도커 내부 네트워크의 다른 컨테이너들이 접근할 수 있도록 열어둔 29092 포트
       # [리스너이름]://[IP]:[포트] 형식으로서 IP는 0.0.0.0 이 생략된 형태
       KAFKA_LISTENERS: HOST://:9092,CONTROLLER://:9093,DOCKER://:29092
@@ -32,8 +32,8 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       # 새 토픽 생성 시 기본 복제수. 단일 브로커이므로 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      # 토픽당 파티션 기본값은 1개 -> 파티션은 추후 변경이 어려우므로 여유있게 세팅하길 권장
-      # 브로커의 모든 토픽에 대한 설정으로, 토픽마다 크기를 다르게 하려면 cli를 통해 토픽생성
+      # 토픽당 파티션 기본값은 1개
+      # 브로커의 모든 토픽에 대한 설정
       KAFKA_NUM_PARTITIONS: 4
       # 메시지 보관 7일 : 별도의 설정이 없어도 default 7일
       KAFKA_LOG_RETENTION_HOURS: 168

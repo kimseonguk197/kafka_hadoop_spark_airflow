@@ -29,7 +29,7 @@ public class Ex04KafkaJsonStreaming {
 
         System.out.println(">>> Ex04KafkaJsonStreaming 시작: member-topic 구독 대기 중...");
 
-        // kafka의 member-topic 구독
+       // kafka의 member-topic 구독
        String bootstrapServers = "host.docker.internal:29092";
         // String bootstrapServers = "b-1.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092";
         Dataset<Row> kafkaDf = spark.readStream()
