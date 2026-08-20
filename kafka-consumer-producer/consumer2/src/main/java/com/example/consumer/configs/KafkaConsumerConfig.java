@@ -19,7 +19,7 @@ public class KafkaConsumerConfig {
     private String kafkaServer;
 
 //    새로운 컨슈머그룹이 추가됐을때 earliest 또는 latest 설정
-    @Value("${spring.kafka.consumer.auto-offset-reset:earliest}")
+    @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
     @Bean
     public ConsumerFactory<String, Object> consumerFactory(){
