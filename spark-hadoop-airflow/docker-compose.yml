@@ -36,7 +36,7 @@ services:
       # REST Submission API(6066)는 기본적으로 꺼져있어서 명시적으로 켜줘야 함 (Airflow가 이 API로 spark-submit을 요청)
       - SPARK_MASTER_OPTS=-Dspark.master.rest.enabled=true
     ports:
-      - "8080:8080"   # Spark Master Web UI (클러스터 상태 및 앱 실행 현황 확인)
+      - "8084:8080"   # Spark Master Web UI (클러스터 상태 및 앱 실행 현황 확인)
       - "7077:7077"   # Spark Master 통신 포트 (Worker 노드 및 드라이버 프로그램 연결)
       - "6066:6066"   # Spark REST Submission API (Airflow가 spark-submit 대신 HTTP로 잡을 제출할 때 사용)
     volumes:

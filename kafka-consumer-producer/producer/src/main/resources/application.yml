@@ -1,6 +1,5 @@
 server:
-  port: 8084
-  # port: 8080
+  port: 8080
 spring:
   kafka:
 #    단일 브로커 환경에서 설정
