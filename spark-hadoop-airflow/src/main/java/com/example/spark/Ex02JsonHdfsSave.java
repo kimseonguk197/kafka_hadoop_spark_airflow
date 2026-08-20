@@ -8,6 +8,7 @@ import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.split;
 import static org.apache.spark.sql.functions.when;
 
+// json원본 데이터를 변형 후 hdfs에 저장하는 작업 수행
 public class Ex02JsonHdfsSave {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder()
@@ -48,6 +49,14 @@ public class Ex02JsonHdfsSave {
 
         System.out.println(">>> 저장된 정제 데이터(Parquet) 재조회:");
         spark.read().parquet(hdfsRefinedPath).show();
+
+        // orders 데이터도 저장
+        String ordersInputPath = "/test_data/orders.json";
+        Dataset<Row> ordersDf = spark.read().json(ordersInputPath);
+        String hdfsOrdersRawPath = "hdfs://namenode:8020/user/hadoop/raw_data/orders";
+        ordersDf.write().mode("overwrite").json(hdfsOrdersRawPath);
+        String hdfsOrdersRefinedPath = "hdfs://namenode:8020/user/hadoop/refined_data/orders";
+        ordersDf.write().mode("overwrite").parquet(hdfsOrdersRefinedPath);
 
         spark.stop();
     }

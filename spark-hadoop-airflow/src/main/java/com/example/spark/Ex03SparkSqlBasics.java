@@ -7,21 +7,22 @@ import org.apache.spark.sql.SparkSession;
 import static org.apache.spark.sql.functions.*;
 
 
-// Ex01DataFrameBasic에서 데이터를 처리한 방식은 dataframe API였고, 여기서는 직접 SQL문을 활용
+// hdfs에 저장된 데이터를 불러서 조회/통계 처리
 public class Ex03SparkSqlBasics {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder()
                 .appName("SparkSQLBasics")
                 .getOrCreate();
         spark.sparkContext().setLogLevel("WARN");
-        // 데이터 로드
-        Dataset<Row> rawDf = spark.read().json("/test_data/members.json");
+        // Ex02JsonHdfsSave에서 정제 후 저장한 Parquet 데이터를 HDFS에서 로드
+        String hdfsRefinedPath = "hdfs://namenode:8020/user/hadoop/refined_data/members";
+        Dataset<Row> rawDf = spark.read().parquet(hdfsRefinedPath);
 
+        // emailDomain 컬럼 추가
         Dataset<Row> df = rawDf
-                .withColumn("emailDomain", split(col("email"), "@").getItem(1))
-                .withColumn("isAdult", when(col("age").geq(19), true).otherwise(false));
+                .withColumn("emailDomain", split(col("email"), "@").getItem(1));
 
-        // DataFrame을 임시 뷰(테이블)로 등록한 후 SQL로 조회
+        // SQL조회를 위한 임시뷰(테이블) 생성 
         df.createOrReplaceTempView("members");
 
         System.out.println(">>> SQL: 전체 조회");
@@ -41,7 +42,8 @@ public class Ex03SparkSqlBasics {
 
         // SQL문으로 JOIN 수행도 가능
         System.out.println(">>> [SQL 방식] inner join");
-        Dataset<Row> ordersDf = spark.read().json("/test_data/orders.json");
+        String hdfsOrdersRefinedPath = "hdfs://namenode:8020/user/hadoop/refined_data/orders";
+        Dataset<Row> ordersDf = spark.read().parquet(hdfsOrdersRefinedPath);
         ordersDf.createOrReplaceTempView("orders");
         spark.sql(
                 "SELECT o.orderId, m.name, m.email, o.item, o.price, o.orderedAt " +
@@ -49,7 +51,7 @@ public class Ex03SparkSqlBasics {
                         "JOIN orders o ON m.email = o.memberEmail"
         ).show();
 
-        // DataFrame API와 SQL은 결국 동일한 엔진사용
+        // DataFrame API와 SQL은 동일한 엔진사용하여 유사한 기능 수행
         System.out.println(">>> [비교] 성인 회원 조회 (SQL 방식)");
         spark.sql("SELECT name, age FROM members WHERE isAdult = true").show();
 
