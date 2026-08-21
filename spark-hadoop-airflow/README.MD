@@ -8,4 +8,4 @@
 
 3. 예제 실행 (예: Ex01)
 
-docker exec -it spark-master /spark/bin/spark-submit --class com.example.spark.Ex01DataFrameBasics --master spark://spark-master:7077 /spark/build/libs/spark-examples.jar   
+docker exec -it spark-master /spark/bin/spark-submit --class com.example.spark.Ex01DataFrameBasics --master spark://spark-master:7077 /spark-hadoop-airflow/build/libs/spark-examples.jar   
