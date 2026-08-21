@@ -98,8 +98,3 @@ services:
     command: standalone
     restart: always
   
-
-# 컨테이너 데이터 영속성을 위한 볼륨 정의
-volumes:
-  hadoop_namenode:   # 네임노드 메타데이터 유지
-  hadoop_datanode:   # 데이터노드 블록 데이터 유지
