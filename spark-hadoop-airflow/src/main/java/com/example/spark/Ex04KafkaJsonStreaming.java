@@ -29,19 +29,17 @@ public class Ex04KafkaJsonStreaming {
 
         System.out.println(">>> Ex04KafkaJsonStreaming 시작: member-topic 구독 대기 중...");
 
-       // kafka의 member-topic 구독
        String bootstrapServers = "host.docker.internal:29092";
         // String bootstrapServers = "b-1.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.mymsk.in0pxt.c4.kafka.ap-northeast-2.amazonaws.com:9092";
-        Dataset<Row> kafkaDf = spark.readStream()
+        Dataset<Row> memberDf = spark.readStream()
                 .format("kafka")
                 .option("kafka.bootstrap.servers", bootstrapServers)
+                // kafka의 member-topic 구독
                 .option("subscribe", "member-topic")
                 // consumer group id의 경우 spark-kafka-source-<UUID>-... 형태로 자동 생성
                 // offset-reset은 latest 기본
-                .load();
-
-        // Kafka record의 JSON 문자를 문자열로 바꾼 뒤 Dataset으로 변환
-        Dataset<Row> memberDf = kafkaDf
+                .load()
+                // Kafka record의 JSON 문자를 문자열로 바꾼 뒤 Dataset으로 변환
                 .selectExpr("CAST(value AS STRING) AS json_value")
                 .select(from_json(col("json_value"), memberSchema).as("data"))
                 .select("data.*");
