@@ -7,8 +7,6 @@ from airflow import DAG
 from airflow.exceptions import AirflowException
 from airflow.operators.python import PythonOperator
 
-# spark-master의 REST Submission API(6066)을 호출하여 Ex05AirflowSpark파일 실행 요청
-# jar 실행은 spark-master의 내부에 mount하고 있는 jar를 자체적으로 실행
 SPARK_REST_URL = "http://spark-master:6066"
 JAR_PATH = "file:///spark-hadoop-airflow/build/libs/spark-examples.jar"
 MAIN_CLASS = "com.example.spark.Ex05AirflowSpark"
