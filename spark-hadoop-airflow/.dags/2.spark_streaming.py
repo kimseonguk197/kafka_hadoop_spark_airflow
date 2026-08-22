@@ -12,8 +12,6 @@ from airflow.operators.python import PythonOperator
 SPARK_REST_URL = "http://spark-master:6066"
 JAR_PATH = "file:///spark-hadoop-airflow/build/libs/spark-examples.jar"
 MAIN_CLASS = "com.example.spark.Ex04KafkaJsonStreaming"
-
-
 def submit_streaming_job() -> None:
     submit_result = requests.post(
         f"{SPARK_REST_URL}/v1/submissions/create",
