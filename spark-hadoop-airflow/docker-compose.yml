@@ -82,7 +82,7 @@ services:
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
     # postgressql 주소/계정정보 지정
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-      # Airflow 설치 시 기본 제공되는 예제 DAG들을 생성 X
+      # Airflow 설치 시 기본 제공되는 예제 DAG들을 실행 X
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     ports:
       - "8089:8080"   
