@@ -36,7 +36,7 @@ public class Ex05AirflowSpark {
             return;
         }
 
-        // [데이터 정제] (복잡한연산이라 가정) age가 19세 이상이면 isAdult를 true, 아니면 false로 지정
+        // [데이터 정제] age가 19세 이상이면 isAdult를 true, 아니면 false로 지정
         Dataset<Row> refinedDf = rawDf
                 .withColumn("isAdult", when(col("age").geq(19), true).otherwise(false));
 

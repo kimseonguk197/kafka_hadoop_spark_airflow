@@ -73,7 +73,6 @@ services:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
       retries: 5
-    restart: always
 
   airflow:
     image: apache/airflow:2.9.1
@@ -93,8 +92,6 @@ services:
     depends_on:
       postgres:
       # DB가 완전히 준비된 후 Airflow 실행
-        condition: service_healthy  
-
+        condition: service_healthy
+      # 어드민 계정 생성, DB 마이그레이션 실행시점에 필요한 작업 수행
     command: standalone
-    restart: always
-  
