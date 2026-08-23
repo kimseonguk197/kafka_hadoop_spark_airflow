@@ -10,6 +10,7 @@ from airflow.operators.python import PythonOperator
 SPARK_REST_URL = "http://spark-master:6066"
 JAR_PATH = "file:///spark-hadoop-airflow/build/libs/spark-examples.jar"
 MAIN_CLASS = "com.example.spark.Ex05AirflowSpark"
+# spark-master의 REST Submission API(6066)을 호출하여 Ex04KafkaJsonStreaming 실행 요청
 def run_spark_batch_via_rest() -> None:
     submit_result = requests.post(
         f"{SPARK_REST_URL}/v1/submissions/create",
@@ -45,10 +46,20 @@ dag = DAG(
     max_active_runs=1,
 )
 
+# PythonOperator를 통해 run_spark_batch_via_rest 함수 실행
 run_spark_batch_task = PythonOperator(
     task_id="run_spark_batch_via_rest",
     python_callable=run_spark_batch_via_rest,
     dag=dag,
 )
 
+# 실행
 run_spark_batch_task
+
+# 순차(직렬)작업 처리
+# task1 >> task2 >> task3
+
+# 병렬처리라면 아래와 같이 나열
+# task1
+# task2
+# task3
