@@ -45,20 +45,10 @@ dag = DAG(
     max_active_runs=1,
 )
 
-# PythonOperator를 통해 run_spark_batch_via_rest 함수 실행
 run_spark_batch_task = PythonOperator(
     task_id="run_spark_batch_via_rest",
     python_callable=run_spark_batch_via_rest,
     dag=dag,
 )
 
-# 실행
 run_spark_batch_task
-
-# 순차(직렬)작업 처리
-# task1 >> task2 >> task3
-
-# 병렬처리라면 아래와 같이 나열
-# task1
-# task2
-# task3

@@ -46,10 +46,20 @@ dag = DAG(
     max_active_runs=1,
 )
 
+# PythonOperator를 통해 submit_streaming_job 함수 실행
 submit_streaming_task = PythonOperator(
     task_id="submit_streaming_job",
     python_callable=submit_streaming_job,
     dag=dag,
 )
 
+# 실행
 submit_streaming_task
+
+# 순차(직렬)작업 처리
+# task1 >> task2 >> task3
+
+# 병렬처리라면 아래와 같이 나열
+# task1
+# task2
+# task3
