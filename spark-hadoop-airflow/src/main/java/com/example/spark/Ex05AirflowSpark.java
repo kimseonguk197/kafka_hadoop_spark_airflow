@@ -19,22 +19,15 @@ public class Ex05AirflowSpark {
                 .getOrCreate();
 
         spark.sparkContext().setLogLevel("WARN");
-        System.out.println(">>> 현재 서버 시간: " + LocalDateTime.now());
         // 오늘날짜 추출
         String today = LocalDate.now().toString();
+        System.out.println(">>> 현재 서버 시간: " + today);
 
         // Ex04KafkaJsonStreaming이 저장한 원본 Parquet 중 오늘 날짜 폴더만 읽기
         String hdfsRawPath = "hdfs://namenode:8020/user/hadoop/refined_data/member_stream/" + today;
 //        String hdfsRawPath = "s3://my-kafka-spark-airflow-bucket-346903264902-ap-northeast-2-an/user/hadoop/refined_data/member_stream/" + today;
 
-        Dataset<Row> rawDf;
-        try {
-            rawDf = spark.read().parquet(hdfsRawPath);
-        } catch (Exception e) {
-            System.out.println(">>> " + today + " 폴더가 아직 없어 종료합니다: " + hdfsRawPath);
-            spark.stop();
-            return;
-        }
+        Dataset<Row> rawDf  = spark.read().parquet(hdfsRawPath);
 
         // [데이터 정제] age가 19세 이상이면 isAdult를 true, 아니면 false로 지정
         Dataset<Row> refinedDf = rawDf
